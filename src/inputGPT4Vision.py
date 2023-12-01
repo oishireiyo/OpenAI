@@ -87,13 +87,11 @@ class InputGPT4Vision():
     return result.choices[0].message.content
 
 if __name__ == '__main__':
-  input_image_path = 'hogehoge.jpg'
+  input_image_path = '../assets/hogehoge.jpg'
 
   gpt4v = InputGPT4Vision()
   gpt4v.add_message_entry_as_specified_role(role='user')
   gpt4v.add_text_content(text='What do you see in this image?')
   b64image = gpt4v.encode_image_path(input_image_path=input_image_path)
   gpt4v.add_b64image_content(b64image=b64image)
-  text = gpt4v.execute()
-
-  logger.info(text)
+  _ = gpt4v.execute()
