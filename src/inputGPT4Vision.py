@@ -1,5 +1,4 @@
 import os
-import sys
 import cv2
 import base64
 from openai import OpenAI
