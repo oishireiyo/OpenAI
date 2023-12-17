@@ -1,6 +1,7 @@
 import os
 import cv2
 import base64
+import openai
 from openai import OpenAI
 import numpy as np
 from typing import Union
@@ -25,6 +26,23 @@ class InputGPT4Vision():
       'messages': [], # ここに質問や画像などを並べてモデルに投げる。
       'max_tokens': max_tokens_per_call,
     }
+
+  def set_api_key(self, api_key: str) -> bool:
+    openai.api_key = api_key
+    try:
+      _ = openai.Completion.create(
+        model="davinci",
+        messages=[
+          {'role': 'user', 'content': 'Who are you?'}
+        ],
+        max_tokens=5,
+      )
+    except:
+      logger.error('Given API key is not valid.')
+      return False
+    else:
+      self.client = OpenAI(api_key=api_key)
+      return True
 
   def encode_image_path(self, input_image_path: str) -> str:
     with open(input_image_path, 'rb') as image_file:
