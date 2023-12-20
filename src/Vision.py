@@ -178,13 +178,14 @@ if __name__ == '__main__':
   gpt4v.add_message_entry_as_specified_role(role='user')
   gpt4v.add_text_content(
     text=translator.translate(
-      text='以下の画像は一つの動画から時系列順に抽出したものです。各々の画像の説明は行わずに、動画の内容を予想してください。',
+      text='以下の画像は「地球温暖化で寿司が食べられなくなる！？」というタイトルの動画から時系列順に抽出したものです。各々の画像の説明は行わずに、動画の内容を予想してください。',
       source_lang='JA',
       target_lang='EN-US',
     ) if 'translator' in locals() else
     'What is the context of these images?',
   )
-  gpt4v.add_pathvideo_content(pathvideo='../assets/GenerativeAI.mp4', increment=90, detail='low')
+  # gpt4v.add_pathvideo_content(pathvideo='../assets/GenerativeAI.mp4', increment=90, detail='low')
+  gpt4v.add_pathvideo_content(pathvideo='../assets/sushi.mp4', increment=90, detail='low')
 
   gpt4v.print_payload()
   gpt4vanswer = gpt4v.execute()

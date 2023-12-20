@@ -69,6 +69,11 @@ class TextPrompt():
     if response_format in accepted_response_format:
       self.payload['response_format'] = response_format
 
+  def set_payload_style(self, style: str='vivid'):
+    # The style of the generated images. Must be one of the `vivid` or `natural`. This param is only supported for `dall-e-3`.
+    if self.payload['model'] == 'dall-e-3':
+      self.payload['style'] = style
+
   def print_payload(self) -> dict:
     logger.info(self.payload)
     return self.payload
@@ -138,12 +143,26 @@ class Variations():
     return result.data
 
 if __name__ == '__main__':
+  try:
+    import sys
+    sys.path.append('../../DeepLAPI/')
+    from translator import DeepLTranslator
+    translator = DeepLTranslator()
+  except Exception as e:
+    logger.warning(e)
+
   prompter = TextPrompt()
   prompter.set_payload_prompt(
-    prompt='A photograph of a bunch of cats in Tokyo.',
+    prompt=translator.translate(
+      text='10代の若々しいアジア人女性の画像。',
+      source_lang='JA',
+      target_lang='EN-US',
+    ) if 'translator' in locals() else
+    'A photograph of a bunch of cats in Tokyo.',
   )
   prompter.set_payload_quality(
     quality='hd',
   )
+  prompter.set_payload_style(style='vivid')
   prompter.print_payload()
   _ = prompter.execute()
