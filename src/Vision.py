@@ -21,7 +21,7 @@ logger.addHandler(stream_handler)
 # Handmade modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../utils/')
 from payloadParsor import PayloadParsor
-from checkAPIKeyValid import CheckAPIKeyValid
+from checkOpenAIAPIKeyValid import CheckAPIKeyValid
 
 class Vision():
   # Messages must be an array of message object, where each object has a role (either "system", "user" or "assistant") and content.
