@@ -18,6 +18,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade modules
+sys.append.path(os.pardir + '/utils/')
 from payloadParsor import PayloadParsor
 
 class Vision():
