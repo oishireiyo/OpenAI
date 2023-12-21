@@ -163,6 +163,7 @@ cython_debug/
 .DS_store
 
 # Image
+**/assets/*
 *.jpg
 *.jpeg
 *.png
