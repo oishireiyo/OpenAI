@@ -1,4 +1,5 @@
 import os
+import sys
 import cv2
 import pprint
 import base64
@@ -18,8 +19,9 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade modules
-sys.append.path(os.pardir + '/utils/')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../utils/')
 from payloadParsor import PayloadParsor
+from checkAPIKeyValid import CheckAPIKeyValid
 
 class Vision():
   # Messages must be an array of message object, where each object has a role (either "system", "user" or "assistant") and content.
@@ -44,21 +46,11 @@ class Vision():
     }
 
   def set_api_key(self, api_key: str) -> bool:
-    openai.api_key = api_key
-    try:
-      _ = openai.Completion.create(
-        model="davinci",
-        messages=[
-          {'role': 'user', 'content': 'Who are you?'}
-        ],
-        max_tokens=5,
-      )
-    except:
-      logger.error('Given API key is not valid.')
-      return False
-    else:
+    if CheckAPIKeyValid(api_key=api_key):
       self.client = OpenAI(api_key=api_key)
       return True
+    else:
+      return False
 
   # messagesに新しいエントリーを追加
   def add_message_entry_as_specified_role(self, role: str) -> None:
