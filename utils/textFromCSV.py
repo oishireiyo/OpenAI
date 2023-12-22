@@ -22,7 +22,6 @@ def TextFromCSV(csvfile: str):
   return text.split('｡')
 
 def ParseSubtitleCSV(csvfile: str):
-  eos = False
   subtitle = {'texts': [], 'startframes': []}
   with open(csvfile, encoding='shift-jis') as f:
     rows = csv.reader(f)

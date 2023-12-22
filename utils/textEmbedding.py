@@ -1,9 +1,12 @@
 import pprint
 import numpy as np
+from typing import Union
 from sentence_transformers import SentenceTransformer
 
-def TextEmbedding(texts: list[str]):
+def TextEmbedding(texts: Union[str, list[str]]):
   model = SentenceTransformer('pkshatech/simcse-ja-bert-base-clcmlp')
+  if type(texts) is str:
+    texts = [texts]
   embeddings = model.encode(texts)
   return embeddings
 
