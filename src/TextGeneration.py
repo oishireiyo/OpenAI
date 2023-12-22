@@ -19,6 +19,7 @@ logger.addHandler(stream_handler)
 sys.path.append(os.pardir + '/utils/')
 from payloadParsor import PayloadParsor
 from textCosmetics import TextCosmetics
+from textFromCSV import TextFromCSV
 
 class TextGeneration():
   def __init__(self, api_key: Union[str, None]=None, model: str='gpt-4-1106-preview', max_tokens_per_call: int=200) -> None:
@@ -59,6 +60,7 @@ class TextGeneration():
   def execute(self) -> dict:
     result = self.client.chat.completions.create(**self.payload)
 
+    logger.info('-' * 70)
     logger.info(f'Finish reason: {result.choices[0].finish_reason}')
     logger.info(f'Created: {result.created}')
     logger.info(f'ID: {result.id}')
@@ -67,6 +69,7 @@ class TextGeneration():
     logger.info(f'  Prompt tokens: {result.usage.prompt_tokens}')
     logger.info(f'  Total tokens: {result.usage.total_tokens}')
     logger.info(f'Model output: {result.choices[0].message.content}')
+    logger.info('-' * 70)
 
     return result
   
@@ -74,7 +77,7 @@ if __name__ == '__main__':
   try:
     import sys
     sys.path.append('../../DeepLAPI')
-    from translator import DeepLTranslator
+    from src.translator import DeepLTranslator
     translator = DeepLTranslator()
   except Exception as e:
     logger.warning(e)
@@ -89,54 +92,28 @@ if __name__ == '__main__':
     ) if 'translator' in locals() else
     'You are a helpful assistant designed to answer questions in a concise manner.'
   )
-  # llm.add_message_entry_as_specified_role_with_text_content(
-  #   role='user',
-  #   text=translator.translate(
-  #     text='2021-2022年シーズンにNBAを制したチームと、その本拠地はどこですか?',
-  #     source_lang='JA',
-  #     target_lang='EN-US',
-  #   ) if 'translator' in locals() else
-  #   'Who won the NBA title in 2021-2022 season and where is its home town?'
-  # )
-  # llm.add_message_entry_as_specified_role_with_text_content(
-  #   role='assistant',
-  #   text=translator.translate(
-  #     text='ゴールデンステート・ウォリアーズ、カリフォルニア州サンフランシスコ。',
-  #     source_lang='JA',
-  #     target_lang='EN-US',
-  #   ) if 'translator' in locals() else
-  #   'Golden State Warriors, San Francisco, California.'
-  # )
-  # llm.add_message_entry_as_specified_role_with_text_content(
-  #   role='user',
-  #   text=translator.translate(
-  #     text='2020-2021年シーズンにNBAを制したチームと、その本拠地はどこですか?',
-  #     source_lang='JA',
-  #     target_lang='EN-US',
-  #   ) if 'translator' in locals() else
-  #   'Who won the NBA title in 2020-2021 season and where is its home town?'
-  # )
 
-  textfile = open('../assets/transcription.txt', 'r')
+  csvfile = '../assets/helth.csv'
   llm.add_message_entry_as_specified_role_with_text_content(
     role='user',
     text=translator.translate(
       text=TextCosmetics(
-        text=f'以下はあるニュース番組の一場面を文字起こししたものです。キーワードをカンマ区切りで10個抽出してください。\
-          "{textfile.read(-1)}"'
+        text=f'''以下に続く文章は"「座りっぱなし」は寿命が縮む"というタイトルのニュース番組を文字起こししたものです。動画の内容をカンマ区切りで5つの短い文に要約してください。\
+          "{''.join(TextFromCSV(csvfile=csvfile))}"''',
       ),
       source_lang='JA',
       target_lang='EN-US',
     ) if 'translator' in locals() else 'Are you happy?'
   )
 
-  _ = llm.print_payload()
-  llmanswer = llm.execute()
+  llmanswers = llm.execute()
 
-  translated_llmanswer = translator.translate(
-    text=llmanswer.choices[0].message.content,
-    source_lang='EN',
-    target_lang='JA',
-  )
-
-  logger.info(translated_llmanswer)
+  for llmanswer in llmanswers.choices[0].message.content.split('.'):
+    if len(llmanswer) > 5:
+      logger.info(llmanswer)
+      translated_llmanswer = translator.translate(
+        text=llmanswer,
+        source_lang='EN',
+        target_lang='JA',
+      )
+      logger.info(translated_llmanswer)

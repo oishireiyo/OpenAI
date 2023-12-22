@@ -146,7 +146,7 @@ if __name__ == '__main__':
   try:
     import sys
     sys.path.append('../../DeepLAPI/')
-    from translator import DeepLTranslator
+    from src.translator import DeepLTranslator
     translator = DeepLTranslator()
   except Exception as e:
     logger.warning(e)
