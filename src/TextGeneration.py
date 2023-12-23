@@ -51,11 +51,12 @@ class TextGeneration():
   def delete_content(self, index: int=-1) -> None:
     del self.payload['messages'][-1]['content'][index]
 
+  def get_payload(self) -> dict:
+    return self.payload
+
   def print_payload(self) -> dict:
     for line in pprint.pformat(self.payload, width=150).split('\n'):
       logger.info(line)
-    logger.info('-' * 50)
-    return self.payload
   
   def execute(self) -> dict:
     result = self.client.chat.completions.create(**self.payload)
