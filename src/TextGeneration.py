@@ -22,7 +22,7 @@ from textCosmetics import TextCosmetics
 from textFromCSV import TextFromCSV
 
 class TextGeneration():
-  def __init__(self, api_key: Union[str, None]=None, model: str='gpt-4-1106-preview', max_tokens_per_call: int=200) -> None:
+  def __init__(self, api_key: Union[str, None]=None, model: str='gpt-4-1106-preview', max_tokens_per_call: int=400) -> None:
     self.OPENAI_API_KEY = api_key if not api_key is None else os.environ['OPENAI_API_KEY']
     self.client = OpenAI(api_key=self.OPENAI_API_KEY)
     self.payload = {
@@ -44,6 +44,11 @@ class TextGeneration():
   def add_message_entry_as_specified_role_with_text_content(self, role: str, text: str) -> None:
     self.add_message_entry_as_specified_role(role=role)
     self.add_text_content(text=text)
+
+  def add_tool_entry_as_function(self, tools: dict) -> None:
+    if not 'tools' in self.payload:
+      self.payload['tools'] = []
+    self.payload['tools'].append(tools)
 
   def delete_messages(self) -> None:
     self.payload['messages'] = []
