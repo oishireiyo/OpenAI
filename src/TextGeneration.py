@@ -18,8 +18,7 @@ logger.addHandler(stream_handler)
 # Handmade modules
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../utils/')
 from payloadParsor import PayloadParsor
-from textCosmetics import TextCosmetics
-from textFromCSV import TextFromCSV
+from checkOpenAIAPIKeyValid import CheckAPIKeyValid
 
 class TextGeneration():
   def __init__(self, api_key: Union[str, None]=None, model: str='gpt-4-1106-preview', max_tokens_per_call: int=400) -> None:
@@ -30,6 +29,13 @@ class TextGeneration():
       'messages': [],
       'max_tokens': max_tokens_per_call,
     }
+
+  def set_api_key(self, api_key: str) -> bool:
+    if CheckAPIKeyValid(api_key=api_key):
+      self.client = OpenAI(api_key=api_key)
+      return True
+    else:
+      return False
 
   # messagesに新しいエントリーを追加
   def add_message_entry_as_specified_role(self, role: str) -> None:
@@ -80,6 +86,8 @@ class TextGeneration():
     return result
   
 if __name__ == '__main__':
+  from textCosmetics import TextCosmetics
+  from textFromCSV import TextFromCSV
   try:
     import sys
     sys.path.append('../../DeepLAPI')
