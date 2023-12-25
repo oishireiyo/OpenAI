@@ -22,7 +22,7 @@ def TextFromCSV(csvfile: str):
   return text.split('｡')
 
 def ParseSubtitleCSV(csvfile: str):
-  subtitle = {'texts': [], 'startframes': []}
+  subtitle = {'texts': [], 'startsecs': []}
   with open(csvfile, encoding='shift-jis') as f:
     rows = csv.reader(f)
 
@@ -35,7 +35,7 @@ def ParseSubtitleCSV(csvfile: str):
         startframes.append(row[0])
 
         subtitle['texts'].append(''.join(texts) + '｡')
-        subtitle['startframes'].append(startframes[0])
+        subtitle['startsecs'].append(startframes[0])
         if len(sentences) > 1:
           if len(sentences[1]) > 0:
             texts = [''.join(sentences[1:])]
