@@ -21,35 +21,34 @@ def TextFromCSV(csvfile: str):
 
   return text.split('｡')
 
-def ParseSubtitleCSV(csvfile: str):
+def ParseSubtitleCSVreader(csvreader: list):
   subtitle = {'texts': [], 'startsecs': []}
-  with open(csvfile, encoding='shift-jis') as f:
-    rows = csv.reader(f)
+  texts, startframes = [], []
+  for row in csvreader:
+    if '｡' in row[2]:
+      sentences = row[2].split('｡')
+      texts.append(sentences[0])
+      startframes.append(row[0])
 
-    texts = []
-    startframes = []
-    for row in rows:
-      if '｡' in row[2]:
-        sentences = row[2].split('｡')
-        texts.append(sentences[0])
+      subtitle['texts'].append(''.join(texts) + '｡')
+      subtitle['startsecs'].append(startframes[0])
+      if len(sentences) > 1:
+        if len(sentences[1]) > 0: texts = [''.join(sentences[1:])]
+        else: texts = []
+      else:
+        texts = []
+      startframes = []
+    else:
+      if len(row[2]) > 0:
+        texts.append(row[2])
         startframes.append(row[0])
 
-        subtitle['texts'].append(''.join(texts) + '｡')
-        subtitle['startsecs'].append(startframes[0])
-        if len(sentences) > 1:
-          if len(sentences[1]) > 0:
-            texts = [''.join(sentences[1:])]
-          else:
-            texts = []
-        else:
-          texts = []
-        startframes = []
-      else:
-        if len(row[2]) > 0:
-          texts.append(row[2])
-          startframes.append(row[0])
-
   return subtitle
+
+def ParseSubtitleCSV(csvfile: str):
+  with open(csvfile, encodings='shift-jis') as f:
+    csvreader = csv.reader(f)
+    return ParseSubtitleCSVreader(csvreader = csvreader)
 
 if __name__ == '__main__':
   texts = TextFromCSV('../assets/helth.csv')
