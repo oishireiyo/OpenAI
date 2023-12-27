@@ -46,7 +46,7 @@ def ParseSubtitleCSVreader(csvreader: list):
   return subtitle
 
 def ParseSubtitleCSV(csvfile: str):
-  with open(csvfile, encodings='shift-jis') as f:
+  with open(csvfile, encoding='shift-jis') as f:
     csvreader = csv.reader(f)
     return ParseSubtitleCSVreader(csvreader = csvreader)
 
