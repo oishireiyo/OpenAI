@@ -15,7 +15,7 @@ def CheckAPIKeyValid(api_key: str) -> bool:
   try:
     _client = OpenAI(api_key=api_key)
     _client.completions.create(
-      model='davinci',
+      model='davinci-002',
       prompt='Say this is a test.',
       max_tokens=5,
     )
